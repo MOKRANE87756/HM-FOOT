@@ -1,32 +1,79 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نتائج المباريات</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>نتائج المباريات</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">الرئيسية</a></li>
-                <li><a href="#matches">المباريات</a></li>
-                <li><a href="#contact">اتصل بنا</a></li>
-            </ul>
-        </nav>
-    </header>
+// React + Tailwind + LocalStorage Football Team Management App
+// Includes: Add players, mark attendance, save training sessions
 
-    <section id="matches">
-        <h2>آخر المباريات</h2>
-        <div id="results" class="results-container"></div> <!-- سيتم عرض النتائج هنا -->
-    </section>
+import React, { useState, useEffect } from "react";
 
-    <footer>
-        <p>&copy; 2025 جميع الحقوق محفوظة</p>
-    </footer>
+export default function App() {
+  const [players, setPlayers] = useState(() => {
+    const saved = localStorage.getItem("players");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-    <script src="script.js"></script>
-</body>
-</html>
+  const [name, setName] = useState("");
+
+  function addPlayer() {
+    if (!name.trim()) return;
+    const newPlayers = [...players, { id: Date.now(), name, sessions: [] }];
+    setPlayers(newPlayers);
+    localStorage.setItem("players", JSON.stringify(newPlayers));
+    setName("");
+  }
+
+  function addTraining(playerId) {
+    const updated = players.map(p =>
+      p.id === playerId
+        ? { ...p, sessions: [...p.sessions, { date: new Date().toLocaleString() }] }
+        : p
+    );
+    setPlayers(updated);
+    localStorage.setItem("players", JSON.stringify(updated));
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-10">
+      <h1 className="text-3xl font-bold mb-6">📋 إدارة فريق كرة القدم</h1>
+
+      <div className="bg-white p-5 rounded-xl shadow mb-6">
+        <h2 className="text-xl font-semibold mb-3">➕ إضافة لاعب جديد</h2>
+        <div className="flex gap-3">
+          <input
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="اسم اللاعب"
+            className="p-3 border rounded w-full"
+          />
+          <button onClick={addPlayer} className="bg-blue-600 text-white px-5 rounded">
+            إضافة
+          </button>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-5">
+        {players.map(player => (
+          <div key={player.id} className="bg-white p-5 rounded-xl shadow">
+            <h3 className="text-lg font-semibold">👤 {player.name}</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              عدد الحصص: {player.sessions.length}
+            </p>
+
+            <button
+              onClick={() => addTraining(player.id)}
+              className="bg-green-600 text-white mt-3 px-4 py-2 rounded"
+            >
+              تسجيل حضور تدريب
+            </button>
+
+            <div className="mt-4">
+              <h4 className="font-semibold">🗓️ سجل الحضور:</h4>
+              <ul className="list-disc ml-5 text-sm mt-2">
+                {player.sessions.map((s, i) => (
+                  <li key={i}>{s.date}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
