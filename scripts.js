@@ -1,28 +1,69 @@
-const API_KEY = 'gf4ixqasSQCzNtd2S9EYsWQO6i6XrOnNRW1LXmpLuiE5RqMcOzlisIp8IVdf';
-const API_URL = 'https://v3.football.api-sports.io/fixtures?season=2023&league=39';
+// === تحميل اللاعبين من LocalStorage ===
+let players = JSON.parse(localStorage.getItem("players") || "[]");
 
-fetch(API_URL, {
-    method: 'GET',
-    headers: {
-        'x-rapidapi-key': API_KEY,
-        'x-rapidapi-host': 'v3.football.api-sports.io'
+// === حفظ البيانات ===
+function savePlayers() {
+    localStorage.setItem("players", JSON.stringify(players));
+}
+
+// === عرض اللاعبين ===
+function renderPlayers() {
+    const list = document.getElementById("playersList");
+    list.innerHTML = "";
+
+    if (players.length === 0) {
+        list.innerHTML = "<p>لا يوجد لاعبين بعد.</p>";
+        return;
     }
-})
-.then(response => response.json())
-.then(data => {
-    const resultsContainer = document.getElementById('results');
-    data.response.forEach(match => {
-        const matchDiv = document.createElement('div');
-        matchDiv.className = 'match';
-        matchDiv.innerHTML = `
-            <h3>${match.teams.home.name} vs ${match.teams.away.name}</h3>
-            <p>النتيجة: ${match.goals.home} - ${match.goals.away}</p>
-            <p>التاريخ: ${new Date(match.fixture.date).toLocaleString()}</p>
+
+    players.forEach(player => {
+        const div = document.createElement("div");
+        div.className = "player";
+
+        div.innerHTML = `
+            <div class="info">
+                <strong>${player.name}</strong>
+                <br>
+                رقم: ${player.number || "-"}
+                <br>
+                المركز: ${player.position || "-"}
+            </div>
+            <button class="delete-btn" onclick="deletePlayer('${player.id}')">حذف</button>
         `;
-        resultsContainer.appendChild(matchDiv);
+
+        list.appendChild(div);
     });
-})
-.catch(error => {
-    console.error('Error fetching match data:', error);
-    document.getElementById('results').innerHTML = '<p>تعذر جلب النتائج. يرجى المحاولة لاحقًا.</p>';
+}
+
+// === حذف لاعب ===
+function deletePlayer(id) {
+    players = players.filter(p => p.id !== id);
+    savePlayers();
+    renderPlayers();
+}
+
+// === إضافة لاعب ===
+document.getElementById("playerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("playerName").value.trim();
+    if (!name) return alert("الرجاء إدخال الاسم");
+
+    const number = document.getElementById("playerNumber").value;
+    const position = document.getElementById("playerPosition").value;
+
+    players.push({
+        id: Date.now().toString(),
+        name,
+        number,
+        position
+    });
+
+    savePlayers();
+    renderPlayers();
+
+    this.reset();
 });
+
+// تشغيل عند بداية الصفحة
+renderPlayers();
