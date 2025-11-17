@@ -1,95 +1,74 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f9;
-}
-
-header {
-    background: #2a9d8f;
-    color: white;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f3f5f8;
+    margin: 0;
     padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+h1 {
     text-align: center;
+    margin-bottom: 20px;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-nav ul li {
-    display: inline;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1rem;
-}
-
-nav ul li a:hover {
-    text-decoration: underline;
-}
-
-#matches {
+.card {
+    background: white;
     padding: 20px;
-    background-color: #ffffff;
-    margin: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
 }
 
-.results-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-}
-
-.match {
-    background-color: #2a9d8f;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    width: 250px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.match:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-}
-
-footer {
-    background: #264653;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
+input, select {
     width: 100%;
-    bottom: 0;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
 }
 
-/* تصميم متجاوب */
-@media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-    }
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #1764c6;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
-    header h1 {
-        font-size: 1.8rem;
-    }
+button:hover {
+    background: #0f4c96;
+}
 
-    #matches {
-        padding: 15px;
-    }
+.player {
+    background: #f9fbff;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 1px solid #e4e7ee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player .info {
+    font-size: 15px;
+}
+
+.delete-btn {
+    background: #d62828;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.delete-btn:hover {
+    background: #a71f1f;
 }
