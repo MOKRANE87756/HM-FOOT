@@ -1,33 +1,3 @@
-// React + Tailwind + LocalStorage Football Team Management App
-// Includes: Add players, mark attendance, save training sessions
-
-import React, { useState, useEffect } from "react";
-
-export default function App() {
-  const [players, setPlayers] = useState(() => {
-    const saved = localStorage.getItem("players");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [name, setName] = useState("");
-
-  function addPlayer() {
-    if (!name.trim()) return;
-    const newPlayers = [...players, { id: Date.now(), name, sessions: [] }];
-    setPlayers(newPlayers);
-    localStorage.setItem("players", JSON.stringify(newPlayers));
-    setName("");
-  }
-
-  function addTraining(playerId) {
-    const updated = players.map(p =>
-      p.id === playerId
-        ? { ...p, sessions: [...p.sessions, { date: new Date().toLocaleString() }] }
-        : p
-    );
-    setPlayers(updated);
-    localStorage.setItem("players", JSON.stringify(updated));
-  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
