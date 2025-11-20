@@ -1,30 +1,157 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>فريق كرة القدم</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>نظام إدارة فريق كرة القدم</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand">نظام إدارة الفريق</div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="tab-add">إضافة لاعب</button>
+      <button class="tab-btn" data-tab="tab-team">قائمة الفريق</button>
+      <button class="tab-btn" data-tab="tab-att">الحضور</button>
+      <button class="tab-btn" data-tab="tab-stats">الإحصائيات</button>
+    </nav>
+  </header>
 
-    <div class="container">
-        <h1>إدارة فريق كرة القدم</h1>
+  <main class="container">
 
-        <div class="card">
-            <h2>إضافة لاعب جديد</h2>
-            <form id="playerForm">
-                <input type="text" id="playerName" placeholder="اسم اللاعب" required />
-                <button type="submit">إضافة</button>
-            </form>
+    <!-- ADD PLAYER -->
+    <section id="tab-add" class="tab-panel">
+      <h2>إضافة لاعب جديد</h2>
+      <form id="playerForm" class="card form">
+        <div class="row">
+          <label>الاسم</label>
+          <input id="playerName" type="text" placeholder="اسم اللاعب" required />
         </div>
 
-        <div class="card">
-            <h2>قائمة الفريق</h2>
-            <ul id="teamList" class="team-list"></ul>
+        <div class="row two">
+          <div>
+            <label>رقم القميص</label>
+            <input id="playerNumber" type="number" placeholder="مثال: 7" min="0" />
+          </div>
+          <div>
+            <label>المركز</label>
+            <select id="playerPosition">
+              <option value="">اختر المركز</option>
+              <option value="حارس مرمى">حارس مرمى</option>
+              <option value="قلب دفاع">قلب دفاع</option>
+              <option value="ظهير">ظهير</option>
+              <option value="وسط مدافع">وسط مدافع</option>
+              <option value="وسط هجومي">وسط هجومي</option>
+              <option value="جناح">جناح</option>
+              <option value="مهاجم">مهاجم</option>
+            </select>
+          </div>
         </div>
-    </div>
 
-    <script src="app.js"></script>
+        <div class="row">
+          <label>صورة اللاعب (اختياري)</label>
+          <input id="playerPhoto" type="file" accept="image/*" />
+        </div>
+
+        <div class="row actions">
+          <button class="btn" type="submit">حفظ اللاعب</button>
+          <button id="resetForm" type="button" class="btn ghost">تفريغ</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- TEAM LIST -->
+    <section id="tab-team" class="tab-panel hidden">
+      <h2>قائمة الفريق</h2>
+      <div class="card">
+        <div class="controls">
+          <input id="searchPlayer" placeholder="ابحث باسم أو رقم..." />
+          <select id="filterPos">
+            <option value="">كل المراكز</option>
+            <option>حارس مرمى</option>
+            <option>قلب دفاع</option>
+            <option>ظهير</option>
+            <option>وسط مدافع</option>
+            <option>وسط هجومي</option>
+            <option>جناح</option>
+            <option>مهاجم</option>
+          </select>
+          <button id="clearPlayers" class="btn ghost">مسح الكل</button>
+        </div>
+
+        <ul id="teamList" class="team-grid"></ul>
+      </div>
+    </section>
+
+    <!-- ATTENDANCE -->
+    <section id="tab-att" class="tab-panel hidden">
+      <h2>جلسات التدريب و الحضور</h2>
+      <div class="card">
+        <form id="sessionForm" class="row">
+          <div style="flex:1">
+            <label>تاريخ الجلسة</label>
+            <input id="sessionDate" type="date" />
+          </div>
+          <div style="width:150px">
+            <label>الوقت</label>
+            <input id="sessionTime" type="time" />
+          </div>
+          <div style="width:180px; align-self:end">
+            <button type="submit" class="btn">إنشاء جلسة</button>
+          </div>
+        </form>
+
+        <div class="sessions-list" id="sessionsList"></div>
+
+        <div class="card small" id="attendanceArea" style="margin-top:12px; display:none">
+          <h3 id="attHeader">حضور الجلسة</h3>
+          <div id="attendanceGrid" class="attendance-grid"></div>
+          <div class="row actions" style="margin-top:8px">
+            <button id="saveAttendance" class="btn">حفظ الحضور</button>
+            <button id="exportSessionCSV" class="btn ghost">تصدير CSV</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section id="tab-stats" class="tab-panel hidden">
+      <h2>إحصائيات الفريق</h2>
+      <div class="card stats-grid">
+        <div class="stat">
+          <div class="stat-num" id="statPlayers">0</div>
+          <div class="stat-label">عدد اللاعبين</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="statSessions">0</div>
+          <div class="stat-label">عدد الجلسات</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="statAvg">0%</div>
+          <div class="stat-label">متوسط نسبة الحضور</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="statTop">-</div>
+          <div class="stat-label">الأكثر حضورا</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>تفاصيل الحضور لكل لاعب</h3>
+        <table class="table" id="statsTable">
+          <thead><tr><th>اللاعب</th><th>حضور</th><th>غياب</th><th>نسبة</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="row actions" style="margin-top:10px">
+          <button id="exportAllCSV" class="btn">تصدير CSV كامل</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">جميع البيانات محفوظة محليًا على متصفحك.</footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
