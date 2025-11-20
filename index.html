@@ -1,83 +1,30 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>فريق كرة القدم</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-3xl font-bold mb-6">📋 إدارة فريق كرة القدم</h1>
+    <div class="container">
+        <h1>إدارة فريق كرة القدم</h1>
 
-      <div className="bg-white p-5 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-3">➕ إضافة لاعب جديد</h2>
-        <div className="flex gap-3">
-          <input
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="اسم اللاعب"
-            className="p-3 border rounded w-full"
-          />
-          <button onClick={addPlayer} className="bg-blue-600 text-white px-5 rounded">
-            إضافة
-          </button>
+        <div class="card">
+            <h2>إضافة لاعب جديد</h2>
+            <form id="playerForm">
+                <input type="text" id="playerName" placeholder="اسم اللاعب" required />
+                <button type="submit">إضافة</button>
+            </form>
         </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
-        {players.map(player => (
-          <div key={player.id} className="bg-white p-5 rounded-xl shadow">
-            <h3 className="text-lg font-semibold">👤 {player.name}</h3>
-            <p className="text-sm text-gray-600 mt-1">
-              عدد الحصص: {player.sessions.length}
-            </p>
-
-            <button
-              onClick={() => addTraining(player.id)}
-              className="bg-green-600 text-white mt-3 px-4 py-2 rounded"
-            >
-              تسجيل حضور تدريب
-            </button>
-
-            <div className="mt-4">
-              <h4 className="font-semibold">🗓️ سجل الحضور:</h4>
-              <ul className="list-disc ml-5 text-sm mt-2">
-                {player.sessions.map((s, i) => (
-                  <li key={i}>{s.date}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
-      </div>
+        <div class="card">
+            <h2>قائمة الفريق</h2>
+            <ul id="teamList" class="team-list"></ul>
+        </div>
     </div>
-  );
-}
 
-<!-- Team List Section Added -->
-<h2>قائمة الفريق</h2>
-<ul class="team-list" id="teamList"></ul>
-
-<style>
-.team-list { margin-top:20px; background:#fff; padding:15px; border-radius:12px; list-style:none; }
-.team-list li { padding:8px 0; border-bottom:1px solid #eee; }
-</style>
-
-<script>
-const form = document.getElementById('playerForm');
-const teamList = document.getElementById('teamList');
-
-if(form){
-  form.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const name = document.getElementById('playerName')?.value.trim();
-    if(!name) return;
-    let players = JSON.parse(localStorage.getItem('players')||'[]');
-    players.push({name});
-    localStorage.setItem('players', JSON.stringify(players));
-    form.reset();
-    renderTeam();
-  });
-}
-
-function renderTeam(){
-  let players = JSON.parse(localStorage.getItem('players')||'[]');
-  if(teamList){ teamList.innerHTML = players.map(p=>`<li>${p.name}</li>`).join(''); }
-}
-renderTeam();
-</script>
-
+    <script src="app.js"></script>
+</body>
+</html>
